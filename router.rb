@@ -64,10 +64,10 @@ class RIP < EM::Connection
       if i = @@routing_table.index {|x| x.destination == entry.address}
 
         if entry.metric < @@routing_table[i].distance
-          @@routing_table[i] = RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 10)
+          @@routing_table[i] = RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 180)
         end
       else 
-        @@routing_table.push(RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 10))
+        @@routing_table.push(RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 180))
       end
     end
   end
@@ -85,6 +85,11 @@ class RIP < EM::Connection
   def self.show_table
     print_table @@routing_table
   end
+
+
+  def self.update_table_records
+    
+  end
 end
 
 
@@ -96,6 +101,10 @@ EM.run do
 
   EM.add_periodic_timer(2) do
     RIP::show_table
+  end
+
+  EM.add_periodic_time(1) do
+    RIP::update_table_records
   end
 
   EM.start_server"127.0.0.1", ARGV[0], RIP
