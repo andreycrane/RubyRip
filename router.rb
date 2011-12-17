@@ -61,7 +61,7 @@ class RIP < EM::Connection
     response_message.entries.each { |e| e.metric += 1 }
     next_hop = Socket.unpack_sockaddr_in(get_peername)
     response_message.entries.each do |entry|
-      if i = @@routing_table.index {|x| x.destination == entry.address}
+      if (i = @@routing_table.index {|x| x.destination == entry.address}) and entry.metric < 16
         # маршрут действителен обновляем таймер
         @@routing_table[i].timer = 18
 
@@ -70,7 +70,7 @@ class RIP < EM::Connection
           # метод triggered update
           RIP::send_responses
         end
-      else 
+      elsif entry.metric < 16
         @@routing_table.push(RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 18))
         # метод triggered update
         RIP::send_responses
