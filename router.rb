@@ -63,13 +63,17 @@ class RIP < EM::Connection
     response_message.entries.each do |entry|
       if i = @@routing_table.index {|x| x.destination == entry.address}
         # маршрут действителен обновляем таймер
-        entry[i].timer = 18
+        @@routing_table[i].timer = 18
 
         if entry.metric < @@routing_table[i].distance
           @@routing_table[i] = RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 18)
+          # метод triggered update
+          RIP::send_responses
         end
       else 
         @@routing_table.push(RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 18))
+        # метод triggered update
+        RIP::send_responses
       end
     end
   end
@@ -100,6 +104,8 @@ class RIP < EM::Connection
         entry.timer -= 1
       elsif entry.route_change and entry.timer == 0
         @@routing_table.delete(entry)
+        # метод triggered update
+        RIP::send_responses
       end
     end
   end
