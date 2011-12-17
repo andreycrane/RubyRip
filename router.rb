@@ -106,7 +106,7 @@ EM.run do
     RIP::show_table
   end
 
-  EM.add_periodic_time(1) do
+  EM.add_periodic_timer(1) do
     RIP::update_table_records
   end
 
