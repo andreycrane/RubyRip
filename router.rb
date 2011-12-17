@@ -88,7 +88,10 @@ class RIP < EM::Connection
 
 
   def self.update_table_records
-    
+    @@routing_table.each do |entry|
+      if not entry.route_change & entry.time != 0
+      end
+    end
   end
 end
 

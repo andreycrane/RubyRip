@@ -1,12 +1,12 @@
 class RoutingRecord
-  attr_accessor :destination, :next_hop, :distance, :timer
+  attr_accessor :destination, :next_hop, :distance, :timer, :route_change
 
   def initialize destination, next_hop, distance, timer
     @destination = destination
     @next_hop = next_hop
     @distance = distance
     @timer = timer
-    
+    @route_change = false
   end
 
   def to_yaml_properties

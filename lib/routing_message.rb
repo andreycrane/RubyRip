@@ -1,12 +1,11 @@
 class RoutingMessage
 
   class Entry
-    attr_accessor :address, :metric, :route_change
+    attr_accessor :address, :metric
 
     def initialize address, metric
       @address = address
       @metric = metric
-      @route_change = false
     end
 
     def to_yaml_properties
