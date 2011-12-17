@@ -1,12 +1,15 @@
+$LOAD_PATH << './lib'
+
 require 'rubygems'
 require 'eventmachine'
 require 'yaml'
 require 'socket'
 require 'hirb'
-require './routes_receiver'
-require './routing_message'
-require './routing_record'
-require './response_sender'
+
+require 'routes_receiver'
+require 'routing_message'
+require 'routing_record'
+require 'response_sender'
 
 
 unless ARGV[0]
