@@ -1,0 +1,15 @@
+--- 
+- !ruby/object:RoutingRecord 
+  destination: 120.250.4.0
+  next_hop: 
+  - 165.82.52.10
+  - 9000
+  distance: 4
+  timer: 10
+- !ruby/object:RoutingRecord 
+  destination: 120.250.4.0
+  next_hop: 
+  - 165.82.61.0
+  - 9001
+  distance: 2
+  timer: 10
