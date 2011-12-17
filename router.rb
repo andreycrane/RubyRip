@@ -84,7 +84,8 @@ class RIP < EM::Connection
     if response_message.command == 2
       update_table response_message
     else
-
+      next_hop = Socket.unpack_sockaddr_in(get_peername)
+      EM.connect "127.0.0.1", next_hop[0], ResponseSender, @@routing_record
     end
   end
 
