@@ -3,14 +3,16 @@ class RoutesReceiver < EM::Connection
 
   def initialize message, routing_table
     super
-	
+	  rescue Exception
 	  @data = nil
     @routing_table = routing_table
     @message = message
+
   end
 
   def post_init
     send_data YAML::dump @message
+    rescue Exception
   end
 
   def receive_data data

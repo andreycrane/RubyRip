@@ -16,8 +16,6 @@ class RoutingMessage
   attr_accessor :command, :entries
 
   def initialize command, entries
-    super
-
     @command = command
     @entries = entries
   end
@@ -26,9 +24,8 @@ class RoutingMessage
     ['@command', '@entries']
   end
 
-  def self.from_table table
+  def self.response_from_table table
     entries = table.collect { |entry| entry.to_message_entry }
-
     new 2, entries
   end 
 end

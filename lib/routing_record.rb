@@ -6,6 +6,7 @@ class RoutingRecord
     @next_hop = next_hop
     @distance = distance
     @timer = timer
+    
   end
 
   def to_yaml_properties
