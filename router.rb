@@ -75,8 +75,11 @@ class RIP < EM::Connection
   def receive_data data
     response_message = YAML::load data
     # Если пришел update message
-    puts response_message.inspect
-    update_table response_message
+    if response_message.command == 2
+      update_table response_message
+    else
+
+    end
   end
 
   def self.show_table

@@ -4,7 +4,7 @@ class ResponseSender < EM::Connection
 
   def initialize table
     super
-      @table = table
+    @table = table
   end
 
   def post_init
@@ -14,7 +14,6 @@ class ResponseSender < EM::Connection
 
   def connection_completed
   	data = YAML::dump @message
-  	puts data
   	send_data data
   end
 end
