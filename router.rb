@@ -52,13 +52,10 @@ class RIP < EM::Connection
     end
   end
 
-  def receive_data data
-    response_message = YAML::load data
-    puts response_message.entries.inspect
+  def update_table response_message
     response_message.entries.each { |e| e.metric += 1 }
     next_hop = Socket.unpack_sockaddr_in(get_peername)
     response_message.entries.each do |entry|
-
       if i = @@routing_table.index {|x| x.destination == entry.address}
 
         if entry.metric < @@routing_table[i].distance
@@ -67,6 +64,15 @@ class RIP < EM::Connection
       else 
         @@routing_table.push(RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 10))
       end
+  end
+
+  def receive_data data
+    response_message = YAML::load data
+    # Если пришел update message
+    if response_message.command == 2
+      update_table response_message
+    else
+      # если пришел request message
     end
   end
 end
@@ -80,5 +86,3 @@ EM.run do
 
   EM.start_server"127.0.0.1", ARGV[0], RIP
 end
-
-
