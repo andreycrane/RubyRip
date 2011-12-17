@@ -8,7 +8,7 @@ class ResponseSender < EM::Connection
   end
 
   def post_init
-  	@message = RoutingMessage::from_table @table
+  	@message = RoutingMessage::response_from_table @table
   end
 
   def connection_completed

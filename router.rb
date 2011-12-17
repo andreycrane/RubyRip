@@ -64,6 +64,7 @@ class RIP < EM::Connection
       else 
         @@routing_table.push(RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 10))
       end
+    end
   end
 
   def receive_data data
@@ -75,6 +76,10 @@ class RIP < EM::Connection
       # если пришел request message
     end
   end
+
+  def self.show_table
+    print_table @@routing_table
+  end
 end
 
 
@@ -82,6 +87,10 @@ end
 EM.run do
   EM.add_periodic_timer(3) do
     RIP::send_responses
+  end
+
+  EM.add_periodic_timer(2) do
+    RIP::show_table
   end
 
   EM.start_server"127.0.0.1", ARGV[0], RIP

@@ -1,4 +1,4 @@
-#Create Evironment utilite
+#Create Environment utilite
 
 require 'fileutils'
 
