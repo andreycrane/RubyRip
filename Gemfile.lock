@@ -1,0 +1,12 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    eventmachine (0.12.10)
+    hirb (0.6.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  eventmachine
+  hirb
