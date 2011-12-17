@@ -14,7 +14,8 @@ class RoutingRecord
   end
 
   def to_message_entry
-    RoutingMessage::Entry.new @destination, @distance 
+    # если запись помечена к удалению, она отправляется с метрикой 16
+    RoutingMessage::Entry.new @destination, @route_change ? 16 : @distance 
   end
 
   def to_hash

@@ -62,12 +62,14 @@ class RIP < EM::Connection
     next_hop = Socket.unpack_sockaddr_in(get_peername)
     response_message.entries.each do |entry|
       if i = @@routing_table.index {|x| x.destination == entry.address}
+        # маршрут действителен обновляем таймер
+        entry[i].timer = 18
 
         if entry.metric < @@routing_table[i].distance
-          @@routing_table[i] = RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 180)
+          @@routing_table[i] = RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 18)
         end
       else 
-        @@routing_table.push(RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 180))
+        @@routing_table.push(RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 18))
       end
     end
   end
@@ -89,7 +91,15 @@ class RIP < EM::Connection
 
   def self.update_table_records
     @@routing_table.each do |entry|
-      if not entry.route_change & entry.time != 0
+      if not entry.route_change and entry.timer != 0
+        entry.timer -= 1
+      elsif not entry.route_change and entry.timer == 0
+        entry.timer = 12
+        entry.route_change = true
+      elsif entry.route_change and entry.timer != 0
+        entry.timer -= 1
+      elsif entry.route_change and entry.timer == 0
+        @@routing_table.delete(entry)
       end
     end
   end
