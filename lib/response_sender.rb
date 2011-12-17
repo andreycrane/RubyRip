@@ -9,11 +9,12 @@ class ResponseSender < EM::Connection
 
   def post_init
   	@message = RoutingMessage::response_from_table @table
+    rescue Exception
   end
 
   def connection_completed
   	data = YAML::dump @message
   	puts data
-  	send_data YAML::dump @message
+  	send_data data
   end
 end

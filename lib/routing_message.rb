@@ -26,7 +26,6 @@ class RoutingMessage
 
   def self.response_from_table table
     entries = table.collect { |entry| entry.to_message_entry }
-
     new 2, entries
   end 
 end
