@@ -32,28 +32,28 @@ class RIP < EM::Connection
   include Socket::Constants
   @@routing_table = YAML::load_file('table.yaml')
   @@ports = YAML::load_file('ports.yaml')
+  puts @@ports
 
   def initialize
     super
   end
 
   def self.send_responses
-    # Для каждого маршрутизатора в таблице
-    routers = @@routing_table.uniq { |entry| entry.next_hop }
-    routers.each do |router|
+    # Для каждого подключенного маршрутизатора
+    @@ports.each do |router|
       begin
         # Проверяем доступен ли маршрутизатор
         socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
-        sockaddr = Socket.pack_sockaddr_in(router.next_hop[1], '127.0.0.1' )
+        sockaddr = Socket.pack_sockaddr_in(router[:port], router[:host])
         socket.connect sockaddr
       rescue Errno::ECONNREFUSED
-        puts "Router at #{router.next_hop[0]}:#{router.next_hop[1]} is not avaliable"
+        puts "Router at #{router[:host]}:#{router[:port]} is not avaliable"
       else
         # Если маршрутизатор доступен отправляем ему таблицу
         # метод Split horizon
-        table =  @@routing_table.select { |entry| entry.next_hop[1] != router.next_hop[1] }
+        table =  @@routing_table.select { |entry| entry.next_hop[1] != router[:port] }
 
-        EM.connect "127.0.0.1", router.next_hop[1], ResponseSender, table
+        EM.connect "127.0.0.1", router[:port], ResponseSender, table
       end
     end
   end
