@@ -98,7 +98,7 @@ class RIP < EM::Connection
   def self.update_table_records
     @@routing_table.each do |entry|
       if not entry.route_change and entry.timer != 0
-        entry.timer -= 1
+        entry.timer -= 1 if not entry.next_hop.empty?
       elsif not entry.route_change and entry.timer == 0
         entry.timer = 12
         entry.route_change = true
