@@ -64,7 +64,8 @@ class RIP < EM::Connection
     response_message.entries.each do |entry|
       if (i = @@routing_table.index {|x| x.destination == entry.address}) and entry.metric < 16
         # маршрут действителен обновляем таймер
-        @@routing_table[i].timer = 18
+        # таймер обновляем если запись пришла с того же роутера
+        @@routing_table[i].timer = 18 if @@routing_table[i].next_hop[1] == response_message.sender
 
         if entry.metric < @@routing_table[i].distance
           @@routing_table[i] = RoutingRecord.new(entry.address, ['127.0.0.1', response_message.sender], entry.metric, 18)
