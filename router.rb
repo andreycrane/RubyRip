@@ -31,6 +31,7 @@ class RIP < EM::Connection
 
   include Socket::Constants
   @@routing_table = YAML::load_file('table.yaml')
+  @@ports = YAML::load_file('ports.yaml')
 
   def initialize
     super

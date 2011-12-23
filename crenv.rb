@@ -11,9 +11,12 @@ require 'fileutils'
   end
 
   files = ["./router.rb", 
-	       "./table0" + n.to_s + ".yaml"]
+	         "./tables/table0" + n.to_s + ".yaml",
+           "./ports/ports0" + n.to_s + ".yaml"
+          ]
   FileUtils.cp files, router_dir
   FileUtils.cd router_dir
   FileUtils.mv "table0" + n.to_s + ".yaml", "table.yaml"
+  FileUtils.mv "ports0" + n.to_s + ".yaml", "ports.yaml"
   FileUtils.cd ".."
 end
