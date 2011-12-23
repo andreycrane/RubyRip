@@ -13,19 +13,20 @@ class RoutingMessage
     end
   end
 
-  attr_accessor :command, :entries
+  attr_accessor :command, :entries, :sender
 
-  def initialize command, entries
+  def initialize command, entries, sender
     @command = command
     @entries = entries
+    @sender = sender
   end
 
   def to_yaml_properties
-    ['@command', '@entries']
+    ['@command', '@entries', '@sender']
   end
 
-  def self.response_from_table table
+  def self.response_from_table table, sender
     entries = table.collect { |entry| entry.to_message_entry }
-    new 2, entries
+    new 2, entries, sender
   end 
 end

@@ -53,7 +53,7 @@ class RIP < EM::Connection
         # метод Split horizon
         table =  @@routing_table.select { |entry| entry.next_hop[1] != router[:port] }
 
-        EM.connect "127.0.0.1", router[:port], ResponseSender, table
+        EM.connect "127.0.0.1", router[:port], ResponseSender, table, ARGV[0]
       end
     end
   end
@@ -67,12 +67,12 @@ class RIP < EM::Connection
         @@routing_table[i].timer = 18
 
         if entry.metric < @@routing_table[i].distance
-          @@routing_table[i] = RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 18)
+          @@routing_table[i] = RoutingRecord.new(entry.address, ['127.0.0.1', response_message.sender], entry.metric, 18)
           # метод triggered update
           RIP::send_responses
         end
       elsif entry.metric < 16
-        @@routing_table.push(RoutingRecord.new(entry.address, next_hop.reverse, entry.metric, 18))
+        @@routing_table.push(RoutingRecord.new(entry.address, ['127.0.0.1', response_message.sender], entry.metric, 18))
         # метод triggered update
         RIP::send_responses
       end
@@ -86,7 +86,7 @@ class RIP < EM::Connection
       update_table response_message
     else
       next_hop = Socket.unpack_sockaddr_in(get_peername)
-      EM.connect "127.0.0.1", next_hop[0], ResponseSender, @@routing_record
+      EM.connect "127.0.0.1", response_message.sender, ResponseSender, @@routing_record
     end
   end
 
